@@ -1,3 +1,21 @@
 <resources>
-    <string name="app_name">booksearchapp</string>
+    <string name="app_name">책검색</string>
+
+    <string name="home">홈</string>
+    <string name="my_list">내 보관함</string>
+    <string name="search">검색</string>
+
+    <string name="iso_date_format">yyyy-MM-dd\'T\'HH:mm:ss.SSSX</string>
+    <string name="date_format">yyyy년 MM월 dd일   HH:mm:ss</string>
+    <string name="save">저장하기</string>
+    <string name="save_favorite">검색창에서 책을 저장해보세요.</string>
+    <string name="resent_search">최근 검색</string>
+    <string name="delete_all">전체 삭제</string>
+
+    <string name="error_images_loading">책 목록을 불러오는데 오류가 발생했습니다.</string>
+    <string name="error_bookmark_loading">좋아요 리스트를 불러오는데 오류가 발생했습니다.</string>
+    <string name="error_bookmark_save">좋아요 저장 오류가 발생했습니다.</string>
+    <string name="error_bookmark_delete">좋아요 삭제 오류가 발생했습니다.</string>
+
+    <string name="count">%s 개</string>
 </resources>
