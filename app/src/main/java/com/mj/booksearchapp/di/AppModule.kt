@@ -1,8 +1,9 @@
 package com.mj.booksearchapp.di
 
 import android.content.Context
-import com.mj.booksearchapp.data.database.dao.BookmarkDao
 import com.mj.booksearchapp.data.network.KakaoApiService
+import com.mj.booksearchapp.data.repository.BookRepository
+import com.mj.booksearchapp.data.repository.DefaultBookRepository
 import com.mj.booksearchapp.util.provider.DefaultResourcesProvider
 import com.mj.booksearchapp.util.provider.ResourcesProvider
 import dagger.Module
@@ -23,21 +24,18 @@ object AppModule {
     fun provideIoDispatcher(): CoroutineDispatcher = Dispatchers.IO
 
 
-//    @Singleton
-//    @Provides
-//    fun provideBookRepository(
-//        kakaoApiService: KakaoApiService,
-//        ioDispatcher: CoroutineDispatcher,
-//        bookmarkDaoDao: BookmarkDao
-//    ): ImageRepository = DefaultImageRepository(kakaoApiService, ioDispatcher, bookmarkDaoDao)
+    @Singleton
+    @Provides
+    fun provideBookRepository(
+        kakaoApiService: KakaoApiService,
+        ioDispatcher: CoroutineDispatcher,
+    ): BookRepository = DefaultBookRepository(kakaoApiService, ioDispatcher)
 
     @Singleton
     @Provides
     fun provideResourcesProvider(
         @ApplicationContext appContext: Context
     ): ResourcesProvider = DefaultResourcesProvider(appContext)
-
-
 
 
 

@@ -1,4 +1,4 @@
-package com.mj.booksearchapp.presentation.search
+package com.mj.booksearchapp.presentation.detail
 
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
@@ -12,7 +12,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class SearchFragment : BaseFragment<MainViewModel, FragmentSearchBinding>() {
+class DetailFragment : BaseFragment<MainViewModel, FragmentDetailBinding>() {
 
     override val viewModel: MainViewModel by activityViewModels()
 
@@ -21,7 +21,7 @@ class SearchFragment : BaseFragment<MainViewModel, FragmentSearchBinding>() {
     lateinit var resourcesProvider: ResourcesProvider
 
 
-    override fun getViewBinding(): FragmentSearchBinding = FragmentSearchBinding.inflate(layoutInflater)
+    override fun getViewBinding(): FragmentDetailBinding = FragmentDetailBinding.inflate(layoutInflater)
 
     override fun initViews() {
 
@@ -33,8 +33,8 @@ class SearchFragment : BaseFragment<MainViewModel, FragmentSearchBinding>() {
 
 
     companion object {
-        const val TAG = "SearchFragment"
-        fun newInstance() = SearchFragment()
+        const val TAG = "DetailFragment"
+        fun newInstance() = DetailFragment()
     }
 
 }

@@ -1,12 +1,8 @@
-package com.mj.booksearchapp.data.database.data
+package com.mj.booksearchapp.domain.model
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
-@Entity(tableName = "bookmarks")
-data class Bookmark(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+data class BookInfo(
     val title: String,
     val contents: String,
     val url: String,
@@ -19,4 +15,5 @@ data class Bookmark(
     val salePrice: Int,
     val thumbnail: String,
     val status: String,
+    var favorite: Boolean = false
 )
