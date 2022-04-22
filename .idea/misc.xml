@@ -10,6 +10,7 @@
         <entry key="app/src/main/res/layout/fragment_detail.xml" value="0.5268518518518519" />
         <entry key="app/src/main/res/layout/fragment_favorite.xml" value="0.42239583333333336" />
         <entry key="app/src/main/res/layout/fragment_search.xml" value="0.42239583333333336" />
+        <entry key="app/src/main/res/layout/viewholder_book_info.xml" value="0.5911458333333334" />
         <entry key="app/src/main/res/menu/main_bottom_navigation_menu.xml" value="0.42239583333333336" />
       </map>
     </option>

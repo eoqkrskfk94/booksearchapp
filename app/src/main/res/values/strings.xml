@@ -17,5 +17,6 @@
     <string name="error_bookmark_save">좋아요 저장 오류가 발생했습니다.</string>
     <string name="error_bookmark_delete">좋아요 삭제 오류가 발생했습니다.</string>
 
-    <string name="count">%s 개</string>
+    <string name="translate">%s 역</string>
+    <string name="price">%s원</string>
 </resources>

@@ -23,8 +23,8 @@ class BookInfoPagingSource(
         }
     }
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, BookInfo> = withContext(ioDispatcher) {
-        return@withContext try {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, BookInfo> {
+        return try {
 
             val page = params.key ?: 1
 
@@ -37,9 +37,9 @@ class BookInfoPagingSource(
             )
 
         } catch (exception: IOException) {
-            return@withContext LoadResult.Error(exception)
+            return LoadResult.Error(exception)
         } catch (exception: HttpException) {
-            return@withContext LoadResult.Error(exception)
+            return LoadResult.Error(exception)
         }
     }
 }
