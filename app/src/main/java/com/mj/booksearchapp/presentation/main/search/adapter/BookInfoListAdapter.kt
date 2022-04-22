@@ -1,4 +1,4 @@
-package com.mj.booksearchapp.presentation.search.adapter
+package com.mj.booksearchapp.presentation.main.search.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -10,7 +10,6 @@ import com.mj.booksearchapp.R
 import com.mj.booksearchapp.databinding.ViewholderBookInfoBinding
 import com.mj.booksearchapp.domain.model.BookInfo
 import com.mj.booksearchapp.util.commaString
-import com.mj.booksearchapp.util.getDateString
 import com.mj.booksearchapp.util.provider.ResourcesProvider
 
 
@@ -33,8 +32,7 @@ class BookInfoListAdapter(
 
         fun bind(bookInfo: BookInfo, position: Int) = with(binding) {
             textviewBookTitle.text = bookInfo.title
-            //textviewDatetime.text = getDateString(bookInfo.datetime, resourcesProvider.getString(R.string.iso_date_format), resourcesProvider.getString(R.string.date_format))
-            textviewAuthor.text = if(bookInfo.authors.isNotEmpty()) bookInfo.authors[0] else null
+            textviewAuthor.text = if (bookInfo.authors.isNotEmpty()) bookInfo.authors[0] else null
             textviewPublisher.text = bookInfo.publisher
             textviewPrice.text = String.format(resourcesProvider.getString(R.string.price), bookInfo.price.commaString)
             textviewStatus.text = bookInfo.status
@@ -45,12 +43,12 @@ class BookInfoListAdapter(
                 .error(R.color.dark_gray)
                 .into(imageviewThumbnail)
 
-            imageviewBookmark.setOnClickListener { itemClick(bookInfo, position) }
+            constraintlayoutBook.setOnClickListener { itemClick(bookInfo, position) }
 
-//            when (imageInfo.bookmark) {
-//                true -> imageviewBookmark.setImageResource(R.drawable.ic_bookmark)
-//                false -> imageviewBookmark.setImageResource(R.drawable.ic_bookmark_border)
-//            }
+            when (bookInfo.favorite) {
+                true -> imageviewBookmark.setImageResource(R.drawable.ic_baseline_favorite)
+                false -> imageviewBookmark.setImageResource(R.drawable.ic_baseline_favorite_border)
+            }
         }
 
     }

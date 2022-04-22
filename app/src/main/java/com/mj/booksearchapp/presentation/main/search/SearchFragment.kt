@@ -1,17 +1,15 @@
-package com.mj.booksearchapp.presentation.search
+package com.mj.booksearchapp.presentation.main.search
 
-import android.widget.Toast
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.activityViewModels
-import androidx.paging.PagingData
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.mj.booksearchapp.databinding.FragmentDetailBinding
 import com.mj.booksearchapp.databinding.FragmentSearchBinding
 import com.mj.booksearchapp.presentation.base.BaseFragment
 import com.mj.booksearchapp.presentation.main.MainViewModel
-import com.mj.booksearchapp.presentation.search.adapter.BookInfoListAdapter
+import com.mj.booksearchapp.presentation.main.search.adapter.BookInfoListAdapter
 import com.mj.booksearchapp.util.provider.ResourcesProvider
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -76,7 +74,8 @@ class SearchFragment : BaseFragment<MainViewModel, FragmentSearchBinding>() {
         recyclerviewImageInfo.itemAnimator = null
 
         bookInfoRecyclerViewAdapter = BookInfoListAdapter(resourcesProvider) { bookInfo, position ->
-
+            val action = SearchFragmentDirections.actionSearchFragmentToDetailFragment(bookInfo)
+            view?.let { Navigation.findNavController(it).navigate(action) }
         }
         recyclerviewImageInfo.adapter = bookInfoRecyclerViewAdapter
     }

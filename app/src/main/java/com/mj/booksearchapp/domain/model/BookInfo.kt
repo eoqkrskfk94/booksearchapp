@@ -1,7 +1,9 @@
 package com.mj.booksearchapp.domain.model
 
-import com.google.gson.annotations.SerializedName
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class BookInfo(
     val title: String,
     val contents: String,
@@ -16,4 +18,4 @@ data class BookInfo(
     val thumbnail: String,
     val status: String,
     var favorite: Boolean = false
-)
+): Parcelable

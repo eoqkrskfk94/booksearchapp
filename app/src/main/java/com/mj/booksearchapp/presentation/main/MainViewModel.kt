@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.mj.booksearchapp.R
 import com.mj.booksearchapp.domain.model.BookInfo
 import com.mj.booksearchapp.domain.usecase.GetBookListUseCase
@@ -37,7 +38,7 @@ class MainViewModel @Inject constructor(
             _dataLoading.value = true
             when (val result = getBookListUseCase(searchString)) {
                 is Result.Success -> {
-                    result.getValue().run {
+                    result.getValue().cachedIn(viewModelScope).run {
                         this.collectLatest { pagingData ->
                             _bookInfoListPaging.value = pagingData
                             _dataLoading.value = false
