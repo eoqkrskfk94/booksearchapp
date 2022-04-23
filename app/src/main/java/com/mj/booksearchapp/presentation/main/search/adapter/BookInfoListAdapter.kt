@@ -2,6 +2,7 @@ package com.mj.booksearchapp.presentation.main.search.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -15,7 +16,7 @@ import com.mj.booksearchapp.util.provider.ResourcesProvider
 
 class BookInfoListAdapter(
     private val resourcesProvider: ResourcesProvider,
-    private val itemClick: (BookInfo, Int) -> Unit
+    private val itemClick: (BookInfo, Int, ImageView) -> Unit
 ) : PagingDataAdapter<BookInfo, BookInfoListAdapter.PagingViewHolder>(diffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PagingViewHolder {
@@ -34,7 +35,7 @@ class BookInfoListAdapter(
             textviewBookTitle.text = bookInfo.title
             textviewAuthor.text = if (bookInfo.authors.isNotEmpty()) bookInfo.authors[0] else null
             textviewPublisher.text = bookInfo.publisher
-            textviewPrice.text = String.format(resourcesProvider.getString(R.string.price), bookInfo.price.commaString)
+            textviewPrice.text = String.format(resourcesProvider.getString(R.string.won), bookInfo.price.commaString)
             textviewStatus.text = bookInfo.status
 
             Glide.with(root)
@@ -43,7 +44,7 @@ class BookInfoListAdapter(
                 .error(R.color.dark_gray)
                 .into(imageviewThumbnail)
 
-            constraintlayoutBook.setOnClickListener { itemClick(bookInfo, position) }
+            constraintlayoutBook.setOnClickListener { itemClick(bookInfo, position, imageviewThumbnail) }
 
             when (bookInfo.favorite) {
                 true -> imageviewBookmark.setImageResource(R.drawable.ic_baseline_favorite)

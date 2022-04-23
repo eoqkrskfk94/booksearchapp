@@ -5,6 +5,8 @@ import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.FragmentNavigator
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mj.booksearchapp.databinding.FragmentSearchBinding
 import com.mj.booksearchapp.presentation.base.BaseFragment
@@ -73,9 +75,11 @@ class SearchFragment : BaseFragment<MainViewModel, FragmentSearchBinding>() {
         recyclerviewImageInfo.layoutManager = LinearLayoutManager(requireContext())
         recyclerviewImageInfo.itemAnimator = null
 
-        bookInfoRecyclerViewAdapter = BookInfoListAdapter(resourcesProvider) { bookInfo, position ->
+        bookInfoRecyclerViewAdapter = BookInfoListAdapter(resourcesProvider) { bookInfo, position, imageView ->
             val action = SearchFragmentDirections.actionSearchFragmentToDetailFragment(bookInfo)
-            view?.let { Navigation.findNavController(it).navigate(action) }
+            view?.let {
+                Navigation.findNavController(it).navigate(action)
+            }
         }
         recyclerviewImageInfo.adapter = bookInfoRecyclerViewAdapter
     }

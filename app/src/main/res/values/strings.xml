@@ -4,9 +4,10 @@
     <string name="home">홈</string>
     <string name="my_list">내 보관함</string>
     <string name="search">검색</string>
+    <string name="search_book">제목, 저자, 출판사 검색</string>
 
     <string name="iso_date_format">yyyy-MM-dd\'T\'HH:mm:ss.SSSX</string>
-    <string name="date_format">yyyy년 MM월 dd일   HH:mm:ss</string>
+    <string name="date_format">yyyy년 MM월 dd일</string>
     <string name="save">저장하기</string>
     <string name="save_favorite">검색창에서 책을 저장해보세요.</string>
     <string name="resent_search">최근 검색</string>
@@ -18,5 +19,11 @@
     <string name="error_bookmark_delete">좋아요 삭제 오류가 발생했습니다.</string>
 
     <string name="translate">%s 역</string>
-    <string name="price">%s원</string>
+    <string name="won">%s원</string>
+    <string name="book_description">작품 소개</string>
+    <string name="translator">역자</string>
+    <string name="author">저자</string>
+    <string name="publisher">출판사</string>
+    <string name="price">가격</string>
+    <string name="release_date">출시일</string>
 </resources>
