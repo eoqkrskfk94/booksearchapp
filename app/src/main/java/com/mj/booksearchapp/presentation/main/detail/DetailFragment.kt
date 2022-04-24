@@ -57,6 +57,7 @@ class DetailFragment : BaseFragment<MainViewModel, FragmentDetailBinding>() {
                 true -> {
                     bookInfo.favorite = false
                     setFavoriteButtonState()
+                    if (position != -1) viewModel.deleteFavorite(bookInfo, position)
                 }
                 false -> {
                     bookInfo.favorite = true
@@ -83,8 +84,6 @@ class DetailFragment : BaseFragment<MainViewModel, FragmentDetailBinding>() {
         textviewReleaseDate.text = getDateString(bookInfo.datetime, getString(R.string.iso_date_format), getString(R.string.date_format))
         textviewBookDescription.text = bookInfo.contents
         setFavoriteButtonState()
-
-
     }
 
     private fun setFavoriteButtonState() = with(binding) {

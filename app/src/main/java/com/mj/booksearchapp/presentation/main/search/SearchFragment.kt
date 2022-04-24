@@ -53,6 +53,11 @@ class SearchFragment : BaseFragment<MainViewModel, FragmentSearchBinding>() {
             bookInfoRecyclerViewAdapter.snapshot()[it]?.favorite = true
             bookInfoRecyclerViewAdapter.notifyItemChanged(it)
         }
+
+        viewModel.deleteFavoritePosition.observe(viewLifecycleOwner) {
+            bookInfoRecyclerViewAdapter.snapshot()[it]?.favorite = false
+            bookInfoRecyclerViewAdapter.notifyItemChanged(it)
+        }
     }
 
     private fun setSearchEditText() = with(binding) {
@@ -83,10 +88,6 @@ class SearchFragment : BaseFragment<MainViewModel, FragmentSearchBinding>() {
         recyclerviewImageInfo.itemAnimator = null
 
         bookInfoRecyclerViewAdapter = BookInfoListAdapter(resourcesProvider) { bookInfo, position, _ ->
-//            val action = SearchFragmentDirections.actionSearchFragmentToDetailFragment(bookInfo, position)
-//            view?.let {
-//                Navigation.findNavController(it).navigate(action)
-//            }
 
             val detailFragment = DetailFragment()
             val bundle = Bundle()
