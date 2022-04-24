@@ -20,7 +20,6 @@ abstract class BaseFragment<VM: BaseViewModel, VB: ViewBinding>: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        println("create")
         binding = getViewBinding()
         initViews()
         observeData()

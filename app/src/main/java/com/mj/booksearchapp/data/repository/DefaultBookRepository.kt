@@ -20,8 +20,6 @@ class DefaultBookRepository @Inject constructor(
 
     override suspend fun getBookList(searchString: String): Result<Flow<PagingData<BookInfo>>> = withContext(ioDispatcher) {
         return@withContext try {
-
-
             Result.Success(Pager(PagingConfig(pageSize = 10)) {
                 BookInfoPagingSource(searchString, ioDispatcher, kakaoApiService)
             }.flow)

@@ -1,14 +1,17 @@
 package com.mj.booksearchapp.presentation.main.search
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.FragmentNavigator
 import androidx.navigation.fragment.FragmentNavigatorExtras
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mj.booksearchapp.R
 import com.mj.booksearchapp.databinding.FragmentSearchBinding
@@ -18,6 +21,8 @@ import com.mj.booksearchapp.presentation.main.detail.DetailFragment
 import com.mj.booksearchapp.presentation.main.search.adapter.BookInfoListAdapter
 import com.mj.booksearchapp.util.provider.ResourcesProvider
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -34,8 +39,7 @@ class SearchFragment : BaseFragment<MainViewModel, FragmentSearchBinding>() {
     override fun getViewBinding(): FragmentSearchBinding = FragmentSearchBinding.inflate(layoutInflater)
 
     override fun initViews() {
-
-        setImageInfoRecyclerview()
+        setBookInfoRecyclerview()
         setSearchEditText()
     }
 
@@ -58,6 +62,10 @@ class SearchFragment : BaseFragment<MainViewModel, FragmentSearchBinding>() {
             bookInfoRecyclerViewAdapter.snapshot()[it]?.favorite = false
             bookInfoRecyclerViewAdapter.notifyItemChanged(it)
         }
+
+        viewModel.error.observe(viewLifecycleOwner) {
+            Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun setSearchEditText() = with(binding) {
@@ -78,26 +86,36 @@ class SearchFragment : BaseFragment<MainViewModel, FragmentSearchBinding>() {
     private fun setSearchTextDeleteButton() = with(binding) {
         imageviewDelete.setOnClickListener {
             edittextSearch.setText("")
-            recyclerviewImageInfo.isVisible = false
+            recyclerviewBookInfo.isVisible = false
             imageviewDelete.isGone = true
         }
     }
 
-    private fun setImageInfoRecyclerview() = with(binding) {
-        recyclerviewImageInfo.layoutManager = LinearLayoutManager(requireContext())
-        recyclerviewImageInfo.itemAnimator = null
+    private fun setBookInfoRecyclerview() = with(binding) {
+        recyclerviewBookInfo.layoutManager = LinearLayoutManager(requireContext())
+        recyclerviewBookInfo.itemAnimator = null
 
         bookInfoRecyclerViewAdapter = BookInfoListAdapter(resourcesProvider) { bookInfo, position, _ ->
 
-            val detailFragment = DetailFragment()
-            val bundle = Bundle()
-            bundle.putParcelable("bookInfo", bookInfo)
-            bundle.putInt("position", position)
-            detailFragment.arguments = bundle
-
+            val detailFragment = DetailFragment().apply {
+                arguments = Bundle().apply {
+                    putParcelable("bookInfo", bookInfo)
+                    putInt("position", position)
+                }
+            }
             showFragment(detailFragment, DetailFragment.TAG)
         }
-        recyclerviewImageInfo.adapter = bookInfoRecyclerViewAdapter
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            bookInfoRecyclerViewAdapter.loadStateFlow.collectLatest { loadStates ->
+                when (loadStates.refresh) {
+                    is LoadState.Error -> {
+                        Toast.makeText(requireContext(), getString(R.string.error_images_loading), Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+        recyclerviewBookInfo.adapter = bookInfoRecyclerViewAdapter
     }
 
     private fun showFragment(fragment: Fragment, tag: String) {

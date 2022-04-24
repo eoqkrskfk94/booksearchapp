@@ -25,10 +25,12 @@ class BookInfoPagingSource(
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, BookInfo> {
         return try {
-
             val page = params.key ?: 1
 
-            val bookList = kakaoApiService.getBookList(query = searchString, page = page, size = 50).body()?.documents?.toBookInfoList() ?: listOf()
+            val bookList = withContext(ioDispatcher) {
+                println("thread: ${Thread.currentThread().name}")
+                kakaoApiService.getBookList(query = searchString, page = page, size = 50).body()?.documents?.toBookInfoList() ?: listOf()
+            }
 
             LoadResult.Page(
                 data = bookList,
@@ -39,6 +41,8 @@ class BookInfoPagingSource(
         } catch (exception: IOException) {
             return LoadResult.Error(exception)
         } catch (exception: HttpException) {
+            return LoadResult.Error(exception)
+        } catch (exception: Exception) {
             return LoadResult.Error(exception)
         }
     }
