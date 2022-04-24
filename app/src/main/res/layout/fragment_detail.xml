@@ -10,6 +10,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/white"
         android:fillViewport="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -48,8 +49,7 @@
                 android:padding="10dp"
                 android:src="@drawable/ic_baseline_favorite_border"
                 app:layout_constraintEnd_toEndOf="@id/guideline_end"
-                app:layout_constraintTop_toTopOf="@id/imageview_back"
-                app:tint="@color/black" />
+                app:layout_constraintTop_toTopOf="@id/imageview_back" />
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardview_thumbnail"

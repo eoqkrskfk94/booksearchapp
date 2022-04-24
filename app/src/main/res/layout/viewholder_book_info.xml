@@ -26,11 +26,11 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
-                android:transitionName="transitionBookImage"
                 android:id="@+id/imageview_thumbnail"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
+                android:transitionName="transitionBookImage"
                 tools:src="@drawable/ic_launcher_background" />
 
 
@@ -91,12 +91,12 @@
             android:id="@+id/textview_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
             android:textColor="@color/dark_gray"
             android:textSize="15sp"
-            android:layout_marginStart="10dp"
-            app:layout_constraintTop_toTopOf="@id/textview_price"
             app:layout_constraintBottom_toBottomOf="@id/textview_price"
             app:layout_constraintStart_toEndOf="@id/textview_price"
+            app:layout_constraintTop_toTopOf="@id/textview_price"
             tools:text="status" />
 
         <View
@@ -116,8 +116,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.97"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/cardview_thumbnail"
-            app:tint="@color/black" />
+            app:layout_constraintTop_toTopOf="@id/cardview_thumbnail" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

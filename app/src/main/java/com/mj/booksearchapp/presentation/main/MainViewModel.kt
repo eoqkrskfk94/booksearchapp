@@ -29,6 +29,15 @@ class MainViewModel @Inject constructor(
     private val _bookInfoListPaging = MutableLiveData<PagingData<BookInfo>>()
     val bookInfoListPaging: LiveData<PagingData<BookInfo>> = _bookInfoListPaging
 
+    private val _saveFavoritePosition = MutableLiveData<Int>()
+    val saveFavoritePosition: LiveData<Int> = _saveFavoritePosition
+
+    private val _selectedBook = MutableLiveData<BookInfo>()
+    val selectedBook: LiveData<BookInfo> = _selectedBook
+
+    private val _selectedBookPosition = MutableLiveData<Int>()
+    val selectedBookPosition: LiveData<Int> = _selectedBookPosition
+
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
 
@@ -50,8 +59,20 @@ class MainViewModel @Inject constructor(
                     _dataLoading.value = false
                 }
             }
-
         }
+    }
+
+    fun setSelectedBook(bookInfo: BookInfo, position: Int) {
+        _selectedBook.value = bookInfo
+        _selectedBookPosition.value = position
+    }
+
+    fun saveFavorite(bookInfo: BookInfo, position: Int) {
+        _saveFavoritePosition.value = position
+    }
+
+    fun deleteFavorite(bookInfo: BookInfo, position: Int) {
+
     }
 
 }
