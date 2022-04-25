@@ -27,4 +27,10 @@ class DefaultBookRepository @Inject constructor(
             Result.Error(e)
         }
     }
+
+    override fun getBookList2(searchString: String): Flow<PagingData<BookInfo>> {
+        return Pager(PagingConfig(pageSize = 10)) {
+            BookInfoPagingSource(searchString, ioDispatcher, kakaoApiService)
+        }.flow
+    }
 }

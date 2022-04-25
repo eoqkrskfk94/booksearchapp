@@ -57,14 +57,36 @@ class SearchFragment : BaseFragment<MainViewModel, FragmentSearchBinding>() {
             bookInfoRecyclerViewAdapter.submitData(viewLifecycleOwner.lifecycle, it)
         }
 
-        viewModel.saveFavoritePosition.observe(viewLifecycleOwner) {
-            bookInfoRecyclerViewAdapter.snapshot()[it]?.favorite = true
-            bookInfoRecyclerViewAdapter.notifyItemChanged(it)
+//        viewModel.saveFavoritePosition.observe(viewLifecycleOwner) {
+//            bookInfoRecyclerViewAdapter.snapshot()[it]?.favorite = true
+//            bookInfoRecyclerViewAdapter.notifyItemChanged(it)
+//        }
+//
+//        viewModel.deleteFavoritePosition.observe(viewLifecycleOwner) {
+//            bookInfoRecyclerViewAdapter.snapshot()[it]?.favorite = false
+//            bookInfoRecyclerViewAdapter.notifyItemChanged(it)
+//        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.pagingDataFlow.collectLatest {
+                bookInfoRecyclerViewAdapter.submitData(it)
+            }
         }
 
-        viewModel.deleteFavoritePosition.observe(viewLifecycleOwner) {
-            bookInfoRecyclerViewAdapter.snapshot()[it]?.favorite = false
-            bookInfoRecyclerViewAdapter.notifyItemChanged(it)
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            viewModel.saveFavoritePosition.collectLatest {
+                if (it == -1) return@collectLatest
+                bookInfoRecyclerViewAdapter.snapshot()[it]?.favorite = true
+                bookInfoRecyclerViewAdapter.notifyItemChanged(it)
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            viewModel.deleteFavoritePosition.collectLatest {
+                if (it == -1) return@collectLatest
+                bookInfoRecyclerViewAdapter.snapshot()[it]?.favorite = false
+                bookInfoRecyclerViewAdapter.notifyItemChanged(it)
+            }
         }
 
         viewModel.error.observe(viewLifecycleOwner) {
@@ -77,8 +99,10 @@ class SearchFragment : BaseFragment<MainViewModel, FragmentSearchBinding>() {
         edittextSearch.doOnTextChanged { text, _, _, _ ->
             if (text != null) {
                 if (text.isNotEmpty()) {
-                    viewModel.getBookList(text.toString().trim())
+                    viewModel.handleQuery(text.toString().trim())
+                    //viewModel.getBookList(text.toString().trim())
                     imageviewDelete.isVisible = true
+                    recyclerviewBookInfo.isVisible = true
                 } else {
                     //검색창이 비워있을때 최근 검색어 창 보여주기
                     imageviewDelete.isGone = true

@@ -9,4 +9,6 @@ interface BookRepository {
 
     suspend fun getBookList(searchString: String): Result<Flow<PagingData<BookInfo>>>
 
+    fun getBookList2(searchString: String): Flow<PagingData<BookInfo>>
+
 }

@@ -11,8 +11,12 @@ class GetBookListUseCase @Inject constructor(
     private val bookRepository: BookRepository
 ) {
 
-    suspend operator fun invoke(searchString: String): Result<Flow<PagingData<BookInfo>>> {
-        return bookRepository.getBookList(searchString)
+//    suspend operator fun invoke(searchString: String): Result<Flow<PagingData<BookInfo>>> {
+//        return bookRepository.getBookList(searchString)
+//    }
+
+    operator fun invoke(searchString: String): Flow<PagingData<BookInfo>> {
+        return bookRepository.getBookList2(searchString)
     }
 
 }

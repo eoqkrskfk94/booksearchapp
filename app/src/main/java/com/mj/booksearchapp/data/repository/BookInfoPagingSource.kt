@@ -27,15 +27,20 @@ class BookInfoPagingSource(
         return try {
             val page = params.key ?: 1
 
-            val bookList = withContext(ioDispatcher) {
+            val response = withContext(ioDispatcher) {
                 println("thread: ${Thread.currentThread().name}")
-                kakaoApiService.getBookList(query = searchString, page = page, size = 50).body()?.documents?.toBookInfoList() ?: listOf()
+                kakaoApiService.getBookList(query = searchString, page = page, size = 50)
             }
+
+            val bookList = response.body()?.documents?.toBookInfoList() ?: listOf()
+
+            val prevKey = if (page == 1) null else page - 1
+            val nextKey = if (bookList.isEmpty() || response.body()?.meta?.isEnd == true) null else page + 1
 
             LoadResult.Page(
                 data = bookList,
-                prevKey = if (page == 1) null else page - 1,
-                nextKey = if (bookList.isEmpty()) null else page + 1
+                prevKey = prevKey,
+                nextKey = nextKey
             )
 
         } catch (exception: IOException) {

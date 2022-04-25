@@ -54,12 +54,12 @@ class DetailFragment : BaseFragment<MainViewModel, FragmentDetailBinding>() {
                 true -> {
                     bookInfo.favorite = false
                     setFavoriteButtonState()
-                    if (position != -1) viewModel.deleteFavorite(bookInfo, position)
+                    if (position != -1) viewModel.deleteFavorite(position)
                 }
                 false -> {
                     bookInfo.favorite = true
                     setFavoriteButtonState()
-                    if (position != -1) viewModel.saveFavorite(bookInfo, position)
+                    if (position != -1) viewModel.saveFavorite(position)
                 }
             }
         }
