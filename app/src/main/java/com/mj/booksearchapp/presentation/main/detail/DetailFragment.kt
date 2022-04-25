@@ -70,15 +70,15 @@ class DetailFragment : BaseFragment<MainViewModel, FragmentDetailBinding>() {
         Glide.with(requireContext())
             .load(bookInfo.thumbnail)
             .apply(bitmapTransform(BlurTransformation(22)))
-            .placeholder(R.color.dark_gray)
-            .error(R.color.dark_gray)
+            .placeholder(R.drawable.image_book_cover)
+            .error(R.drawable.image_book_cover)
             .into(imageviewBackground)
 
 
         Glide.with(requireContext())
             .load(bookInfo.thumbnail)
-            .placeholder(R.color.dark_gray)
-            .error(R.color.dark_gray)
+            .placeholder(R.drawable.image_book_cover)
+            .error(R.drawable.image_book_cover)
             .into(imageviewThumbnail)
 
 

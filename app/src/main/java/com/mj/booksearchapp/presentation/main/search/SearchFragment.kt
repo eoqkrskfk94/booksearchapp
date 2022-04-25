@@ -53,9 +53,9 @@ class SearchFragment : BaseFragment<MainViewModel, FragmentSearchBinding>() {
             binding.progressSearch.isVisible = it
         }
 
-        viewModel.bookInfoListPaging.observe(viewLifecycleOwner) {
-            bookInfoRecyclerViewAdapter.submitData(viewLifecycleOwner.lifecycle, it)
-        }
+//        viewModel.bookInfoListPaging.observe(viewLifecycleOwner) {
+//            bookInfoRecyclerViewAdapter.submitData(viewLifecycleOwner.lifecycle, it)
+//        }
 
 //        viewModel.saveFavoritePosition.observe(viewLifecycleOwner) {
 //            bookInfoRecyclerViewAdapter.snapshot()[it]?.favorite = true
@@ -139,11 +139,18 @@ class SearchFragment : BaseFragment<MainViewModel, FragmentSearchBinding>() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             bookInfoRecyclerViewAdapter.loadStateFlow.collectLatest { loadStates ->
-                when (loadStates.refresh) {
-                    is LoadState.Error -> {
-                        Toast.makeText(requireContext(), getString(R.string.error_images_loading), Toast.LENGTH_SHORT).show()
-                    }
+                if(loadStates.append.endOfPaginationReached) {
+                    textviewNoResult.isVisible = bookInfoRecyclerViewAdapter.itemCount < 1
+                } else {
+                    textviewNoResult.isVisible = false
                 }
+
+                if(loadStates.refresh is LoadState.Error) {
+                    Toast.makeText(requireContext(), getString(R.string.error_images_loading), Toast.LENGTH_SHORT).show()
+                }
+
+                progressSearch.isVisible = loadStates.refresh is LoadState.Loading
+
             }
         }
         recyclerviewBookInfo.adapter = bookInfoRecyclerViewAdapter

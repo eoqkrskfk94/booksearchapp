@@ -40,8 +40,8 @@ class BookInfoListAdapter(
 
             Glide.with(root)
                 .load(bookInfo.thumbnail)
-                .placeholder(R.color.dark_gray)
-                .error(R.color.dark_gray)
+                .placeholder(R.drawable.image_book_cover)
+                .error(R.drawable.image_book_cover)
                 .into(imageviewThumbnail)
 
             constraintlayoutBook.setOnClickListener { itemClick(bookInfo, position, imageviewThumbnail) }
