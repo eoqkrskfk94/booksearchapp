@@ -1,16 +1,18 @@
 package com.mj.booksearchapp.presentation.main.search
 
+import android.app.Activity
+import android.content.Context
 import android.os.Bundle
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.Navigation
-import androidx.navigation.fragment.FragmentNavigator
-import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mj.booksearchapp.R
@@ -24,6 +26,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
 
 @AndroidEntryPoint
 class SearchFragment : BaseFragment<MainViewModel, FragmentSearchBinding>() {
@@ -39,6 +42,7 @@ class SearchFragment : BaseFragment<MainViewModel, FragmentSearchBinding>() {
     override fun getViewBinding(): FragmentSearchBinding = FragmentSearchBinding.inflate(layoutInflater)
 
     override fun initViews() {
+        viewModel.setCurrentFragment(SearchFragment.TAG)
         setBookInfoRecyclerview()
         setSearchEditText()
     }
@@ -83,6 +87,7 @@ class SearchFragment : BaseFragment<MainViewModel, FragmentSearchBinding>() {
         }
     }
 
+
     private fun setSearchTextDeleteButton() = with(binding) {
         imageviewDelete.setOnClickListener {
             edittextSearch.setText("")
@@ -103,6 +108,8 @@ class SearchFragment : BaseFragment<MainViewModel, FragmentSearchBinding>() {
                     putInt("position", position)
                 }
             }
+
+            closeKeyboard()
             showFragment(detailFragment, DetailFragment.TAG)
         }
 
@@ -128,6 +135,15 @@ class SearchFragment : BaseFragment<MainViewModel, FragmentSearchBinding>() {
             .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left)
             .add(R.id.fragment_container_view, fragment, tag)
             .commitAllowingStateLoss()
+    }
+
+    private fun Fragment.closeKeyboard() {
+        view?.let { activity?.hideKeyboard(it) }
+    }
+
+    private fun Context.hideKeyboard(view: View) {
+        val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
 

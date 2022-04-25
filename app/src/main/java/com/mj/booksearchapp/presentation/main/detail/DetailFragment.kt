@@ -1,13 +1,11 @@
 package com.mj.booksearchapp.presentation.main.detail
 
 import android.content.Context
-import android.transition.TransitionInflater
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.Navigation
-import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions.bitmapTransform
 import com.mj.booksearchapp.R
 import com.mj.booksearchapp.databinding.FragmentDetailBinding
 import com.mj.booksearchapp.domain.model.BookInfo
@@ -16,9 +14,9 @@ import com.mj.booksearchapp.presentation.main.MainViewModel
 import com.mj.booksearchapp.presentation.main.search.SearchFragment
 import com.mj.booksearchapp.util.commaString
 import com.mj.booksearchapp.util.getDateString
-import com.mj.booksearchapp.util.provider.ResourcesProvider
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
+import jp.wasabeef.glide.transformations.BlurTransformation
+
 
 @AndroidEntryPoint
 class DetailFragment : BaseFragment<MainViewModel, FragmentDetailBinding>() {
@@ -32,20 +30,19 @@ class DetailFragment : BaseFragment<MainViewModel, FragmentDetailBinding>() {
     override fun getViewBinding(): FragmentDetailBinding = FragmentDetailBinding.inflate(layoutInflater)
 
     override fun initViews() {
+        viewModel.setCurrentFragment(DetailFragment.TAG)
         bookInfo = arguments?.getParcelable("bookInfo")!!
         position = arguments?.getInt("position")!!
         setBookInfo()
         setBackButton()
         setFavoriteButton()
-
-
-
     }
 
 
     private fun setBackButton() = with(binding) {
         imageviewBack.setOnClickListener {
             view?.let {
+                viewModel.setCurrentFragment(SearchFragment.TAG)
                 showPreviousFragment(SearchFragment.newInstance(), SearchFragment.TAG)
             }
         }
@@ -69,11 +66,21 @@ class DetailFragment : BaseFragment<MainViewModel, FragmentDetailBinding>() {
     }
 
     private fun setBookInfo() = with(binding) {
-        Glide.with(root)
+
+        Glide.with(requireContext())
+            .load(bookInfo.thumbnail)
+            .apply(bitmapTransform(BlurTransformation(22)))
+            .placeholder(R.color.dark_gray)
+            .error(R.color.dark_gray)
+            .into(imageviewBackground)
+
+
+        Glide.with(requireContext())
             .load(bookInfo.thumbnail)
             .placeholder(R.color.dark_gray)
             .error(R.color.dark_gray)
             .into(imageviewThumbnail)
+
 
         textviewBookTitle.text = bookInfo.title
         textviewAuthor.text = if (bookInfo.authors.isNotEmpty()) bookInfo.authors[0] else null
@@ -82,14 +89,14 @@ class DetailFragment : BaseFragment<MainViewModel, FragmentDetailBinding>() {
         textviewPrice.text = String.format(getString(R.string.won), bookInfo.price.commaString)
         textviewStatus.text = bookInfo.status
         textviewReleaseDate.text = getDateString(bookInfo.datetime, getString(R.string.iso_date_format), getString(R.string.date_format))
-        textviewBookDescription.text = bookInfo.contents
+        textviewBookDescription.text = String.format(getString(R.string.book_contents), bookInfo.contents)
         setFavoriteButtonState()
     }
 
     private fun setFavoriteButtonState() = with(binding) {
         when (bookInfo.favorite) {
             true -> imageviewFavorite.setImageResource(R.drawable.ic_baseline_favorite)
-            false -> imageviewFavorite.setImageResource(R.drawable.ic_baseline_favorite_border)
+            false -> imageviewFavorite.setImageResource(R.drawable.ic_baseline_favorite_border_white)
         }
     }
 
@@ -121,9 +128,9 @@ class DetailFragment : BaseFragment<MainViewModel, FragmentDetailBinding>() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         val callback: OnBackPressedCallback =
-            object : OnBackPressedCallback(true)
-            {
+            object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
+                    viewModel.setCurrentFragment(SearchFragment.TAG)
                     showPreviousFragment(SearchFragment.newInstance(), SearchFragment.TAG)
                 }
             }
@@ -132,7 +139,6 @@ class DetailFragment : BaseFragment<MainViewModel, FragmentDetailBinding>() {
             callback
         )
     }
-
 
 
     companion object {

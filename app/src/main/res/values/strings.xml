@@ -20,6 +20,7 @@
 
     <string name="translate">%s 역</string>
     <string name="won">%s원</string>
+    <string name="book_contents">%s...</string>
     <string name="book_description">작품 소개</string>
     <string name="translator">역자</string>
     <string name="author">저자</string>

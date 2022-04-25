@@ -23,6 +23,9 @@ class MainViewModel @Inject constructor(
     private val resourcesProvider: ResourcesProvider
 ) : BaseViewModel() {
 
+    private val _currentFragmentTag = MutableLiveData<String>()
+    val currentFragmentTag: LiveData<String> = _currentFragmentTag
+
     private val _dataLoading = MutableLiveData<Boolean>()
     val dataLoading: LiveData<Boolean> = _dataLoading
 
@@ -39,8 +42,19 @@ class MainViewModel @Inject constructor(
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
 
+    private var prevSearchString = ""
+
+
+    fun setCurrentFragment(tag: String) {
+        _currentFragmentTag.value = tag
+    }
+
 
     fun getBookList(searchString: String) {
+        if(searchString == prevSearchString) return
+
+        prevSearchString = searchString
+
         viewModelScope.launch {
             _dataLoading.value = true
             when (val result = getBookListUseCase(searchString)) {
