@@ -20,25 +20,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val getBookListUseCase: GetBookListUseCase,
-    private val resourcesProvider: ResourcesProvider,
-    private val bookRepository: BookRepository
+    private val getBookListUseCase: GetBookListUseCase
 ) : BaseViewModel() {
 
     private val _currentFragmentTag = MutableLiveData<String>()
     val currentFragmentTag: LiveData<String> = _currentFragmentTag
-
-    private val _dataLoading = MutableLiveData<Boolean>()
-    val dataLoading: LiveData<Boolean> = _dataLoading
-
-    private val _bookInfoListPaging = MutableLiveData<PagingData<BookInfo>>()
-    val bookInfoListPaging: LiveData<PagingData<BookInfo>> = _bookInfoListPaging
-
-//    private val _saveFavoritePosition = MutableLiveData<Int>()
-//    val saveFavoritePosition: LiveData<Int> = _saveFavoritePosition
-//
-//    private val _deleteFavoritePosition = MutableLiveData<Int>()
-//    val deleteFavoritePosition: LiveData<Int> = _deleteFavoritePosition
 
     private val _saveFavoritePosition = MutableStateFlow(-1)
     val saveFavoritePosition: StateFlow<Int> = _saveFavoritePosition
@@ -46,16 +32,13 @@ class MainViewModel @Inject constructor(
     private val _deleteFavoritePosition = MutableStateFlow(-1)
     val deleteFavoritePosition: StateFlow<Int> = _deleteFavoritePosition
 
-    private val queryFlow = MutableSharedFlow<String>()
-
-    private val _error = MutableLiveData<String>()
-    val error: LiveData<String> = _error
+    private val searchBookFlow = MutableSharedFlow<String>()
 
     private var prevSearchString = ""
 
-    val pagingDataFlow = queryFlow
+    val pagingDataFlow = searchBookFlow
         .flatMapLatest {
-            getBookList2(it)
+            getBookList(it)
         }
         .cachedIn(viewModelScope)
 
@@ -63,42 +46,18 @@ class MainViewModel @Inject constructor(
         _currentFragmentTag.value = tag
     }
 
-    fun handleQuery(searchString: String) {
-        if(prevSearchString == searchString) return
+    fun searchBook(searchString: String) {
+        if (prevSearchString == searchString) return
         prevSearchString = searchString
+
         viewModelScope.launch {
-            queryFlow.emit(searchString)
+            searchBookFlow.emit(searchString)
         }
     }
 
-//    fun getBookList(searchString: String) {
-//        if(searchString == prevSearchString) return
-//
-//        prevSearchString = searchString
-//
-//        viewModelScope.launch {
-//            _dataLoading.value = true
-//            when (val result = getBookListUseCase(searchString)) {
-//                is Result.Success -> {
-//                    result.getValue().cachedIn(viewModelScope).run {
-//                        this.collectLatest { pagingData ->
-//                            _bookInfoListPaging.value = pagingData
-//                            _dataLoading.value = false
-//                        }
-//                    }
-//                }
-//                is Result.Error -> {
-//                    _error.value = resourcesProvider.getString(R.string.error_images_loading)
-//                    _dataLoading.value = false
-//                }
-//            }
-//        }
-//    }
-
-    private fun getBookList2(searchString: String): Flow<PagingData<BookInfo>> {
+    private fun getBookList(searchString: String): Flow<PagingData<BookInfo>> {
         return getBookListUseCase(searchString)
     }
-
 
     fun saveFavorite(position: Int) {
         _saveFavoritePosition.value = position

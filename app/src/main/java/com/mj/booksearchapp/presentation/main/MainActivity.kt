@@ -19,17 +19,13 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
 
     override fun getViewBinding() = ActivityMainBinding.inflate(layoutInflater)
 
-    override fun initViews(): Unit = with(binding) {
-
+    override fun initViews() {
         when(viewModel.currentFragmentTag.value) {
             null -> showFragment(SearchFragment.newInstance(), SearchFragment.TAG)
             SearchFragment.TAG -> showFragment(SearchFragment.newInstance(), SearchFragment.TAG)
             DetailFragment.TAG -> showFragment(DetailFragment.newInstance(), DetailFragment.TAG)
         }
-//        val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragment_container_view) as NavHostFragment
-//        val navController = navHostFragment.navController
     }
-
 
     override fun observeData() {
 
@@ -41,14 +37,12 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
 
         supportFragmentManager.fragments.forEach {
             supportFragmentManager.beginTransaction()
-                //.setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
                 .hide(it)
                 .commitAllowingStateLoss()
         }
 
         findFragment?.let {
             supportFragmentManager.beginTransaction()
-                //.setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
                 .show(it)
                 .commitAllowingStateLoss()
         } ?: kotlin.run {

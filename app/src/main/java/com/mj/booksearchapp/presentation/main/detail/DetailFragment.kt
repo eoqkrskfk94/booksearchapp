@@ -22,20 +22,22 @@ import jp.wasabeef.glide.transformations.BlurTransformation
 class DetailFragment : BaseFragment<MainViewModel, FragmentDetailBinding>() {
 
     override val viewModel: MainViewModel by activityViewModels()
+    override fun getViewBinding(): FragmentDetailBinding = FragmentDetailBinding.inflate(layoutInflater)
 
-    //private val args: DetailFragmentArgs by navArgs()
     private lateinit var bookInfo: BookInfo
     private var position = -1
-
-    override fun getViewBinding(): FragmentDetailBinding = FragmentDetailBinding.inflate(layoutInflater)
 
     override fun initViews() {
         viewModel.setCurrentFragment(DetailFragment.TAG)
         bookInfo = arguments?.getParcelable("bookInfo")!!
-        position = arguments?.getInt("position")!!
+        position = arguments?.getInt("position") ?: -1
         setBookInfo()
         setBackButton()
         setFavoriteButton()
+    }
+
+    override fun observeData() {
+
     }
 
 
@@ -100,10 +102,6 @@ class DetailFragment : BaseFragment<MainViewModel, FragmentDetailBinding>() {
         }
     }
 
-    override fun observeData() {
-
-    }
-
     private fun showPreviousFragment(fragment: Fragment, tag: String) {
         val findFragment = requireActivity().supportFragmentManager.findFragmentByTag(tag)
 
@@ -124,6 +122,7 @@ class DetailFragment : BaseFragment<MainViewModel, FragmentDetailBinding>() {
             .detach(this)
             .commitAllowingStateLoss()
     }
+
 
     override fun onAttach(context: Context) {
         super.onAttach(context)

@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
@@ -14,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
+import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mj.booksearchapp.R
 import com.mj.booksearchapp.databinding.FragmentSearchBinding
@@ -32,14 +32,11 @@ import javax.inject.Inject
 class SearchFragment : BaseFragment<MainViewModel, FragmentSearchBinding>() {
 
     override val viewModel: MainViewModel by activityViewModels()
+    override fun getViewBinding(): FragmentSearchBinding = FragmentSearchBinding.inflate(layoutInflater)
 
     @Inject
     lateinit var resourcesProvider: ResourcesProvider
-
     private lateinit var bookInfoRecyclerViewAdapter: BookInfoListAdapter
-
-
-    override fun getViewBinding(): FragmentSearchBinding = FragmentSearchBinding.inflate(layoutInflater)
 
     override fun initViews() {
         viewModel.setCurrentFragment(SearchFragment.TAG)
@@ -48,24 +45,6 @@ class SearchFragment : BaseFragment<MainViewModel, FragmentSearchBinding>() {
     }
 
     override fun observeData() {
-
-        viewModel.dataLoading.observe(viewLifecycleOwner) {
-            binding.progressSearch.isVisible = it
-        }
-
-//        viewModel.bookInfoListPaging.observe(viewLifecycleOwner) {
-//            bookInfoRecyclerViewAdapter.submitData(viewLifecycleOwner.lifecycle, it)
-//        }
-
-//        viewModel.saveFavoritePosition.observe(viewLifecycleOwner) {
-//            bookInfoRecyclerViewAdapter.snapshot()[it]?.favorite = true
-//            bookInfoRecyclerViewAdapter.notifyItemChanged(it)
-//        }
-//
-//        viewModel.deleteFavoritePosition.observe(viewLifecycleOwner) {
-//            bookInfoRecyclerViewAdapter.snapshot()[it]?.favorite = false
-//            bookInfoRecyclerViewAdapter.notifyItemChanged(it)
-//        }
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.pagingDataFlow.collectLatest {
@@ -88,10 +67,6 @@ class SearchFragment : BaseFragment<MainViewModel, FragmentSearchBinding>() {
                 bookInfoRecyclerViewAdapter.notifyItemChanged(it)
             }
         }
-
-        viewModel.error.observe(viewLifecycleOwner) {
-            Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
-        }
     }
 
     private fun setSearchEditText() = with(binding) {
@@ -99,8 +74,7 @@ class SearchFragment : BaseFragment<MainViewModel, FragmentSearchBinding>() {
         edittextSearch.doOnTextChanged { text, _, _, _ ->
             if (text != null) {
                 if (text.isNotEmpty()) {
-                    viewModel.handleQuery(text.toString().trim())
-                    //viewModel.getBookList(text.toString().trim())
+                    viewModel.searchBook(text.toString().trim())
                     imageviewDelete.isVisible = true
                     recyclerviewBookInfo.isVisible = true
                 } else {
@@ -132,23 +106,28 @@ class SearchFragment : BaseFragment<MainViewModel, FragmentSearchBinding>() {
                     putInt("position", position)
                 }
             }
-
             closeKeyboard()
             showFragment(detailFragment, DetailFragment.TAG)
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
+
             bookInfoRecyclerViewAdapter.loadStateFlow.collectLatest { loadStates ->
-                if(loadStates.append.endOfPaginationReached) {
+
+                // 검색 결과가 없을때
+                if (loadStates.append.endOfPaginationReached) {
                     textviewNoResult.isVisible = bookInfoRecyclerViewAdapter.itemCount < 1
                 } else {
                     textviewNoResult.isVisible = false
                 }
 
-                if(loadStates.refresh is LoadState.Error) {
+                // 검색 중 오류가 발생했을때
+                if (loadStates.refresh is LoadState.Error) {
                     Toast.makeText(requireContext(), getString(R.string.error_images_loading), Toast.LENGTH_SHORT).show()
+                    bookInfoRecyclerViewAdapter.submitData(PagingData.empty())
                 }
 
+                // 검색 로딩 중일때
                 progressSearch.isVisible = loadStates.refresh is LoadState.Loading
 
             }
