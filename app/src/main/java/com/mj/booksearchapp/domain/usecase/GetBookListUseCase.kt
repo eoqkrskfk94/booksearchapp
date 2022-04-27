@@ -12,5 +12,4 @@ class GetBookListUseCase @Inject constructor(
     operator fun invoke(searchString: String): Flow<PagingData<BookInfo>> {
         return bookRepository.getBookList(searchString)
     }
-
 }

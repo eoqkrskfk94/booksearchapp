@@ -125,11 +125,6 @@ class SearchFragment : BaseFragment<MainViewModel, FragmentSearchBinding>() {
                 }
 
                 // 검색 중 오류가 발생했을때
-//                if (loadStates.refresh is LoadState.Error) {
-//                    Toast.makeText(requireContext(), getString(R.string.error_book_list_loading), Toast.LENGTH_SHORT).show()
-//                    bookInfoRecyclerViewAdapter.submitData(PagingData.empty())
-//                }
-
                 groupError.isVisible = loadStates.refresh is LoadState.Error
 
                 // 검색 로딩 중일때

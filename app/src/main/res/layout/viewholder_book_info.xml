@@ -31,7 +31,7 @@
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
                 android:transitionName="transitionBookImage"
-                tools:src="@drawable/ic_launcher_background" />
+                tools:src="@drawable/image_book_cover" />
 
 
         </com.google.android.material.card.MaterialCardView>
@@ -44,6 +44,8 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="5dp"
             android:layout_marginEnd="5dp"
+            android:ellipsize="end"
+            android:maxLines="3"
             android:textColor="@color/black"
             android:textSize="15sp"
             app:layout_constraintEnd_toStartOf="@id/imageview_bookmark"

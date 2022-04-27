@@ -102,6 +102,7 @@ class DetailFragment : BaseFragment<MainViewModel, FragmentDetailBinding>() {
         }
     }
 
+    // 해당 fragment는 종료하고 이전의 fragment가 살아있으면 보여준다
     private fun showPreviousFragment(fragment: Fragment, tag: String) {
         val findFragment = requireActivity().supportFragmentManager.findFragmentByTag(tag)
 
