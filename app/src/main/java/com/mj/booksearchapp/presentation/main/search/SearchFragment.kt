@@ -77,9 +77,12 @@ class SearchFragment : BaseFragment<MainViewModel, FragmentSearchBinding>() {
                     viewModel.searchBook(text.toString().trim())
                     imageviewDelete.isVisible = true
                     recyclerviewBookInfo.isVisible = true
-                } else {
-                    //검색창이 비워있을때 최근 검색어 창 보여주기
-                    imageviewDelete.isGone = true
+                    groupSearch.isVisible = false
+                } else { // 입력창이 배워 있을때
+                    recyclerviewBookInfo.isVisible = false
+                    imageviewDelete.isVisible = false
+                    groupSearch.isVisible = true
+                    groupError.isVisible = false
                 }
             }
         }
@@ -122,10 +125,12 @@ class SearchFragment : BaseFragment<MainViewModel, FragmentSearchBinding>() {
                 }
 
                 // 검색 중 오류가 발생했을때
-                if (loadStates.refresh is LoadState.Error) {
-                    Toast.makeText(requireContext(), getString(R.string.error_images_loading), Toast.LENGTH_SHORT).show()
-                    bookInfoRecyclerViewAdapter.submitData(PagingData.empty())
-                }
+//                if (loadStates.refresh is LoadState.Error) {
+//                    Toast.makeText(requireContext(), getString(R.string.error_book_list_loading), Toast.LENGTH_SHORT).show()
+//                    bookInfoRecyclerViewAdapter.submitData(PagingData.empty())
+//                }
+
+                groupError.isVisible = loadStates.refresh is LoadState.Error
 
                 // 검색 로딩 중일때
                 progressSearch.isVisible = loadStates.refresh is LoadState.Loading
@@ -135,6 +140,7 @@ class SearchFragment : BaseFragment<MainViewModel, FragmentSearchBinding>() {
         recyclerviewBookInfo.adapter = bookInfoRecyclerViewAdapter
     }
 
+    //해당 fragment는 숨기고 새로운 fragment 생성
     private fun showFragment(fragment: Fragment, tag: String) {
         requireActivity().supportFragmentManager.beginTransaction()
             .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left)
@@ -146,6 +152,7 @@ class SearchFragment : BaseFragment<MainViewModel, FragmentSearchBinding>() {
             .add(R.id.fragment_container_view, fragment, tag)
             .commitAllowingStateLoss()
     }
+
 
     private fun Fragment.closeKeyboard() {
         view?.let { activity?.hideKeyboard(it) }

@@ -121,19 +121,80 @@
             app:layout_constraintTop_toBottomOf="@id/view_border" />
 
 
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/group_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="textview_search, imageview_search_book" />
+
+
+        <ImageView
+            android:id="@+id/imageview_search_book"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="50dp"
+            android:src="@drawable/ic_book"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view_border" />
+
+
+        <TextView
+            android:id="@+id/textview_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/search_for_book"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/imageview_search_book" />
+
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/group_error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:constraint_referenced_ids="textview_search_error, imageview_search_error" />
+
+        <ImageView
+            android:id="@+id/imageview_search_error"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="50dp"
+            android:src="@drawable/ic_error"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view_border" />
+
+
+        <TextView
+            android:id="@+id/textview_search_error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/error_book_list_loading"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/imageview_search_error" />
+
+
         <TextView
             android:id="@+id/textview_no_result"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
             android:text="@string/no_result"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.25" />
+            app:layout_constraintTop_toBottomOf="@id/view_border" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
