@@ -155,6 +155,7 @@ class SearchFragment : BaseFragment<MainViewModel, FragmentSearchBinding>() {
                 // 검색 로딩 중일때
                 progressSearch.isVisible = loadStates.refresh is LoadState.Loading
 
+
             }
         }
         recyclerviewBookInfo.adapter = bookInfoRecyclerViewAdapter
