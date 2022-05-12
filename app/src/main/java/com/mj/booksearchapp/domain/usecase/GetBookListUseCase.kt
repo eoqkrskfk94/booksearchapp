@@ -10,6 +10,6 @@ class GetBookListUseCase @Inject constructor(
     private val bookRepository: BookRepository
 ) {
     operator fun invoke(searchString: String): Flow<PagingData<BookInfo>> {
-        return bookRepository.getBookList(searchString)
+        return bookRepository.getBookPagingData(searchString)
     }
 }

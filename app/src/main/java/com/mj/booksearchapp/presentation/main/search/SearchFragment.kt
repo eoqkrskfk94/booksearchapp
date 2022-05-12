@@ -1,11 +1,15 @@
 package com.mj.booksearchapp.presentation.main.search
 
 import android.app.Activity
+import android.app.Activity.RESULT_OK
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
@@ -19,6 +23,7 @@ import com.mj.booksearchapp.R
 import com.mj.booksearchapp.databinding.FragmentSearchBinding
 import com.mj.booksearchapp.presentation.base.BaseFragment
 import com.mj.booksearchapp.presentation.main.MainViewModel
+import com.mj.booksearchapp.presentation.main.detail.BookDetailActivity
 import com.mj.booksearchapp.presentation.main.detail.DetailFragment
 import com.mj.booksearchapp.presentation.main.search.adapter.BookInfoListAdapter
 import com.mj.booksearchapp.util.provider.ResourcesProvider
@@ -37,6 +42,7 @@ class SearchFragment : BaseFragment<MainViewModel, FragmentSearchBinding>() {
     @Inject
     lateinit var resourcesProvider: ResourcesProvider
     private lateinit var bookInfoRecyclerViewAdapter: BookInfoListAdapter
+    private lateinit var getFavoriteResult: ActivityResultLauncher<Intent>
 
     override fun initViews() {
         viewModel.setCurrentFragment(SearchFragment.TAG)
@@ -65,6 +71,20 @@ class SearchFragment : BaseFragment<MainViewModel, FragmentSearchBinding>() {
                 if (it == -1) return@collectLatest
                 bookInfoRecyclerViewAdapter.snapshot()[it]?.favorite = false
                 bookInfoRecyclerViewAdapter.notifyItemChanged(it)
+            }
+        }
+
+        getFavoriteResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == RESULT_OK) {
+                val intent = it.data
+                val favorite = intent?.getBooleanExtra("favoriteState", false)
+                val position = intent?.getIntExtra("position", -1) ?: -1
+                if (intent != null && favorite == true) {
+                    if (position != -1) viewModel.saveFavorite(position)
+                } else {
+                    if (position != -1) viewModel.deleteFavorite(position)
+                }
+
             }
         }
     }
@@ -103,14 +123,19 @@ class SearchFragment : BaseFragment<MainViewModel, FragmentSearchBinding>() {
 
         bookInfoRecyclerViewAdapter = BookInfoListAdapter(resourcesProvider) { bookInfo, position, _ ->
 
-            val detailFragment = DetailFragment().apply {
-                arguments = Bundle().apply {
-                    putParcelable("bookInfo", bookInfo)
-                    putInt("position", position)
-                }
-            }
-            closeKeyboard()
-            showFragment(detailFragment, DetailFragment.TAG)
+//            val detailFragment = DetailFragment().apply {
+//                arguments = Bundle().apply {
+//                    putParcelable("bookInfo", bookInfo)
+//                    putInt("position", position)
+//                }
+//            }
+//            closeKeyboard()
+//            showFragment(detailFragment, DetailFragment.TAG)
+
+            val intent = Intent(requireContext(), BookDetailActivity::class.java)
+            intent.putExtra("bookInfo", bookInfo)
+            intent.putExtra("position", position)
+            getFavoriteResult.launch(intent)
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
