@@ -20,6 +20,8 @@ class MainActivity : BaseActivity<MainViewModel, ActivityMainBinding>() {
     override fun getViewBinding() = ActivityMainBinding.inflate(layoutInflater)
 
     override fun initViews() {
+        // test 1
+
         when(viewModel.currentFragmentTag.value) {
             null -> showFragment(SearchFragment.newInstance(), SearchFragment.TAG)
             SearchFragment.TAG -> showFragment(SearchFragment.newInstance(), SearchFragment.TAG)
